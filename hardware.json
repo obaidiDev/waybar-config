@@ -1,0 +1,82 @@
+{
+  "cpu": {
+    "format": "CPU {usage}%",
+    "on-click": "kitty -e htop"
+  },
+
+  "temperature": {
+    "format": "{icon} {temperatureC}°C",
+    "format-icons": ["", "", ""],
+    "interval": 1,
+    "critical-threshold": 80,
+    "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+    "input-filename": "temp1_input"
+  },
+
+  "custom/gpu-util": {
+    "exec": "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | awk '{printf \"{\\\"text\\\": \\\"GPU %s%% \\\", \\\"tooltip\\\": \\\"GPU Utilization: %s%%\\\"}\", $1, $1}'",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "lact"
+  },
+
+  "custom/gpu-temp": {
+    "exec": "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits | awk '{printf \"{\\\"text\\\": \\\"%s°C \\\", \\\"tooltip\\\": \\\"GPU Temperature: %s°C\\\"}\", $1, $1}'",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "lact"
+  },
+
+  "custom/gpu-vram": {
+    "exec": "nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk -F', ' '{printf \"{\\\"text\\\": \\\"%sMiB/%sMiB\\\", \\\"tooltip\\\": \\\"VRAM: %sMiB / %sMiB\\\"}\", $1, $2, $1, $2}'",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "lact"
+  },
+
+  "custom/gpu-hotspot": {
+    "exec": "t=$(lact cli stats 2>/dev/null | grep -oP 'GPU Hotspot: \\K[0-9]+'); [ -n \"$t\" ] && printf '{\"text\":\"Hotspot %s°C \",\"tooltip\":\"GPU Hotspot Temperature: %s°C\"}' \"$t\" \"$t\" || printf '{\"text\":\"Hotspot N/A\",\"tooltip\":\"GPU Hotspot: unavailable\"}'",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "lact"
+  },
+
+  "custom/gpu-vram-temp": {
+    "exec": "t=$(lact cli stats 2>/dev/null | grep 'Temperatures' | grep -oP 'VRAM: \\K[0-9]+'); [ -n \"$t\" ] && printf '{\"text\":\"VRAM %s°C \",\"tooltip\":\"GPU VRAM Temperature: %s°C\"}' \"$t\" \"$t\" || printf '{\"text\":\"VRAM N/A\",\"tooltip\":\"VRAM Temperature: unavailable\"}'",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "lact"
+  },
+
+  "memory": {
+    "format": "M {used:0.1f}GiB/{total:0.1f}GiB",
+    "on-click": "kitty -e htop"
+  },
+
+  "disk": {
+    "interval": 30,
+    "format": "D {used}/{total}",
+    "path": "/",
+    "on-click": "kitty -e ncdu ~"
+  },
+
+  "group/hw-cpu": {
+    "orientation": "horizontal",
+    "modules": ["cpu", "temperature"]
+  },
+
+  "group/hw-gpu": {
+    "orientation": "horizontal",
+    "modules": ["custom/gpu-util", "custom/gpu-temp", "custom/gpu-hotspot", "custom/gpu-vram-temp", "custom/gpu-vram"]
+  },
+
+  "group/hw-memory": {
+    "orientation": "horizontal",
+    "modules": ["memory"]
+  },
+
+  "group/hw-disk": {
+    "orientation": "horizontal",
+    "modules": ["disk"]
+  }
+}
