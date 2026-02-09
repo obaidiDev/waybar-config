@@ -4,7 +4,7 @@ It is modified by me using claude code.
 ![Screenshot_20260208_140004_RVNC Viewer](https://github.com/user-attachments/assets/cdea3d8e-df51-47a8-b1f4-9fc202b6bcb6)
 
 ```
-sudo pacman -S lact ncdu htop pavucontrol nm-connection-editor swaync ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hack-nerd```
+sudo pacman -S lact ncdu htop pavucontrol nm-connection-editor swaync ttf-jetbrains-mono-nerd ttf-firacode-nerd ttf-hack-nerd
 ```
 Start waybar in terminal click on the tabs and see the logs, if something failed you might need to enable the service (do it for any of the above packages except swaync):
 ```
